@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Viikon ruokavalio</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f4f6f5; color: #1f2a26; line-height: 1.5;
+  padding: 24px 16px 64px; max-width: 880px; margin: 0 auto;
+}
+header { text-align: center; margin-bottom: 22px; }
+h1 { font-size: 1.7rem; color: #2f6b4f; }
+.meta { color: #6b7a73; font-size: 0.9rem; margin-top: 6px; }
+.tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 22px; }
+.tab {
+  background: #fff; border: 1px solid #d8e0db; color: #46524c;
+  padding: 10px 18px; border-radius: 999px; font-size: 0.92rem;
+  font-weight: 600; cursor: pointer; transition: all 0.15s;
+}
+.tab.aktiivinen { background: #2f6b4f; border-color: #2f6b4f; color: #fff; }
+.tab-sisalto { display: none; }
+.tab-sisalto.aktiivinen { display: block; }
+.alaotsikko { text-align: center; color: #3a4540; font-size: 1.05rem; margin-bottom: 4px; }
+.alakuvaus { text-align: center; color: #8a958f; font-size: 0.85rem; margin-bottom: 18px; }
+.summary { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 0 0 24px; }
+.summary div {
+  background: #2f6b4f; color: #fff; padding: 8px 16px; border-radius: 999px;
+  font-size: 0.85rem; font-weight: 600;
+}
+.summary div.toinen { background: #6b8f5f; }
+.paiva {
+  background: #fff; border-radius: 14px; padding: 18px 20px; margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.paiva h2 { font-size: 1.15rem; color: #2f6b4f; margin-bottom: 12px; }
+.ateria { padding: 12px 0; border-top: 1px solid #eef1ef; }
+.ateria:first-of-type { border-top: none; }
+.ateria-otsikko { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.ateria-otsikko strong { font-size: 1rem; }
+.aika { color: #9aa6a0; font-size: 0.82rem; white-space: nowrap; }
+.nimi { color: #1f2a26; font-weight: 600; margin: 2px 0 6px; }
+.annokset { display: grid; gap: 5px; margin-bottom: 6px; }
+.annos {
+  display: flex; justify-content: space-between; gap: 10px; align-items: baseline;
+  background: #f4f6f5; border-radius: 8px; padding: 6px 11px; font-size: 0.83rem;
+}
+.henkilo { font-weight: 600; color: #2f6b4f; white-space: nowrap; }
+.annos-tiedot { color: #5a6660; text-align: right; }
+.resepti { color: #46524c; font-size: 0.9rem; margin-top: 2px; }
+.kauppalista {
+  background: #fff; border-radius: 14px; padding: 22px; margin-top: 28px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.kauppalista h2 { color: #2f6b4f; margin-bottom: 4px; }
+.kauppalista .ohje { color: #8a958f; font-size: 0.82rem; margin-bottom: 14px; }
+.kategoria { margin-bottom: 14px; }
+.kategoria h3 { font-size: 0.95rem; color: #3a4540; margin-bottom: 6px; }
+.kategoria ul { list-style: none; display: grid; gap: 4px; }
+.kategoria li { font-size: 0.9rem; padding-left: 16px; position: relative; }
+.kategoria li::before { content: "•"; position: absolute; left: 0; color: #2f6b4f; }
+.vinkki {
+  background: #eaf3ee; border-left: 4px solid #2f6b4f; padding: 14px 18px;
+  border-radius: 8px; margin-top: 24px; font-size: 0.92rem; color: #2f4a3d;
+}
+footer { text-align: center; color: #9aa6a0; font-size: 0.78rem; margin-top: 28px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🥗 Viikon ruokavalio</h1>
+    <div class="meta">Päivitetty 13.06.2026 · viikko 24/2026</div>
+    <div class="meta">Kaikki painot raaka-/kuivapainoina</div>
+  </header>
+
+  <div class="tabs"><button class="tab aktiivinen" onclick="naytaTab('paasto', this)">Paastosuunnitelma</button><button class="tab " onclick="naytaTab('normaali', this)">Ilman paastoa</button></div>
+  <div id="tab-paasto" class="tab-sisalto aktiivinen">
+      <div class="alaotsikko">Viikko 24 — Matala GI, runsas proteiini, pätkäpaasto arjessa</div>
+      <div class="alakuvaus">16:8-paasto — ma–pe ei aamupalaa</div>
+      <div class="summary"><div class="">Ville (83 kg): ~1650 kcal · 149 g prot.</div><div class="toinen">Sanna (55 kg): ~1400 kcal · 100 g prot.</div><div>Matala GI</div><div>Ma–pe 12–18</div><div>16:8-paasto</div></div>
+      
+        <div class="paiva">
+          <h2>Maanantai</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:00</span>
+              </div>
+              <div class="nimi">Uunilohi parsakaalin ja fetajuuston kera</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">520 kcal · 50 g prot. · 200 g lohta (raaka) + 200 g parsakaalia + 30 g fetaa + 1 rkl oliiviöljyä</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">390 kcal · 36 g prot. · 140 g lohta (raaka) + 150 g parsakaalia + 20 g fetaa + 1 tl oliiviöljyä</span></div></div>
+              <div class="resepti">Mausta lohifileet sitruunalla, valkosipulilla ja yrteillä. Lado uunivuokaan parsakaalin kanssa, valuta päälle oliiviöljyä. Paista 200 °C noin 18–20 min. Murenna päälle fetajuusto ennen tarjoilua.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:00</span>
+              </div>
+              <div class="nimi">Kreikkalainen jugurtti marjoilla ja saksanpähkinöillä</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">280 kcal · 22 g prot. · 250 g kreikkalaista jugurttia (2 %) + 80 g pakastemarjoja + 20 g saksanpähkinöitä</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">200 kcal · 15 g prot. · 150 g kreikkalaista jugurttia (2 %) + 60 g pakastemarjoja + 15 g saksanpähkinöitä</span></div></div>
+              <div class="resepti">Sulata marjat huoneenlämmössä tai mikrossa. Sekoita jugurttiin ja lisää pähkinät päälle. Nopea, proteiinirikas välipala ilman sokeria.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">17:30</span>
+              </div>
+              <div class="nimi">Kana-kikhernesalaatti pinaatilla ja avokadolla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">520 kcal · 48 g prot. · 180 g kanafilettä (raaka) + 80 g kikherneitä (kuiva) + 60 g avokadoa + 100 g pinaattia</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">400 kcal · 34 g prot. · 120 g kanafilettä (raaka) + 60 g kikherneitä (kuiva) + 40 g avokadoa + 80 g pinaattia</span></div></div>
+              <div class="resepti">Keitä kikherneistä kuivapainon mukaan (ne noin kaksinkertaistuvat) tai käytä purkitettuja huuhdeltuina. Grillaa tai paistinpannulla kanafileet maustetuiksi, viipaloi. Sekoita pinaatin, kikherneistä ja avokadoviipaleiden kanssa, lorauta sitruunamehua.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Iltapala</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Raejuusto kurkkuviipaleilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">160 kcal · 22 g prot. · 200 g raejuustoa + 100 g kurkkua</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">120 kcal · 16 g prot. · 150 g raejuustoa + 80 g kurkkua</span></div></div>
+              <div class="resepti">Annostele raejuusto kulhoon ja lisää päälle mustapippuria ja yrttejä. Tarjoa tuoreen kurkun kanssa. Kevyt, proteiinirikas iltapala ennen syömisikkunan sulkeutumista.</div>
+            </div>
+        </div>
+        <div class="paiva">
+          <h2>Tiistai</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:00</span>
+              </div>
+              <div class="nimi">Linssisoppa porkkanalla ja inkiväärillä</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">490 kcal · 34 g prot. · 120 g punaisia linssejä (kuiva) + 150 g porkkanaa + 100 g selleriä + 200 ml kookosmaitoa</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">370 kcal · 24 g prot. · 85 g punaisia linssejä (kuiva) + 100 g porkkanaa + 80 g selleriä + 100 ml kookosmaitoa</span></div></div>
+              <div class="resepti">Kuullota sipulia, valkosipulia ja inkivääriä öljyssä. Lisää pilkottu porkkana ja selleri, kuullota hetki. Lisää huuhdotut linssit, liemessä paistetut mausteet (kurkuma, juustokumina) sekä kasvisliemi. Keitä 20 min, lisää kookosmaito lopuksi.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:00</span>
+              </div>
+              <div class="nimi">Kananmuna-vihannespala</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">240 kcal · 20 g prot. · 3 kananmunaa + 80 g paprikaa + 50 g pinaattia</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">175 kcal · 14 g prot. · 2 kananmunaa + 60 g paprikaa + 40 g pinaattia</span></div></div>
+              <div class="resepti">Sekoita kananmunat ja lisää pilkottu paprika sekä pinaatti. Paista pannulla miedolla lämmöllä munakas tai pilko pieniksi munakassiivuiksi. Nopea välipala, joka on valmis 5 minuutissa.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">17:30</span>
+              </div>
+              <div class="nimi">Naudanjauheliha-kasvispannu kesäkurpitsalla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">530 kcal · 48 g prot. · 200 g naudanjauhelihaa (raaka, 17 %) + 200 g kesäkurpitsaa + 100 g tomaattia + 50 g punaista paprikaa</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">400 kcal · 35 g prot. · 140 g naudanjauhelihaa (raaka, 17 %) + 150 g kesäkurpitsaa + 80 g tomaattia + 40 g punaista paprikaa</span></div></div>
+              <div class="resepti">Ruskista jauheliha pannulla, mausta valkosipulilla, paprikajauheella ja yrteillä. Lisää kuutioitu kesäkurpitsa ja paprika, paista 5–7 min. Lisää tomaatit ja anna hautua 5 min. Tarjoa sellaisenaan tai rucolan päällä.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Iltapala</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Proteiinirikas rahka kanelilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">160 kcal · 20 g prot. · 200 g maitorahkaa (0 %) + ripaus kanelia + 1 tl chiasiemeniä</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">115 kcal · 14 g prot. · 150 g maitorahkaa (0 %) + ripaus kanelia + 1 tl chiasiemeniä</span></div></div>
+              <div class="resepti">Sekoita rahka, kaneli ja chiasiemet kulhossa. Halutessa lisää muutama tuore mansikka tai vadelma. Kaneli tukee verensokerin hallintaa etenkin insuliiniresistenssistä kärsivillä.</div>
+            </div>
+        </div>
+        <div class="paiva">
+          <h2>Keskiviikko</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:00</span>
+              </div>
+              <div class="nimi">Kvinoapohjainen fetasalaatti kurkkua, oliiveja ja kirsikkatomaatteja</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">530 kcal · 30 g prot. · 80 g kvinoaa (kuiva) + 50 g fetaa + 100 g kirsikkatomaatteja + 80 g kurkkua + 30 g oliiveja</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">400 kcal · 22 g prot. · 55 g kvinoaa (kuiva) + 35 g fetaa + 80 g kirsikkatomaatteja + 60 g kurkkua + 20 g oliiveja</span></div></div>
+              <div class="resepti">Keitä kvinoa ohjeen mukaan (1 osa kvinoaa + 2 osaa vettä, keitä 15 min). Anna jäähtyä. Sekoita kaikkien kasvisten kanssa, murenna feta päälle ja mausta sitruunalla ja yrteillä.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:00</span>
+              </div>
+              <div class="nimi">Tunarahka sellerin kera</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">250 kcal · 38 g prot. · 1 prk (185 g) tonnikalaa omassa liemessä + 100 g rahkaa + 2 sellerin vartta</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">185 kcal · 27 g prot. · 120 g tonnikalaa omassa liemessä + 70 g rahkaa + 2 sellerin vartta</span></div></div>
+              <div class="resepti">Valuta tonnikala, sekoita rahkaan, mausta mustapippurilla ja tillikällä. Tarjoa viipaloidun sellerin kanssa dippinä. Erittäin proteiinipitoinen ja nopea välipala.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">17:30</span>
+              </div>
+              <div class="nimi">Uunikanaa ja juureksia yrttimarinadissa</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">510 kcal · 52 g prot. · 200 g kanafilettä (raaka) + 150 g porkkanaa + 150 g punajuurta + 100 g purjoa</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">380 kcal · 38 g prot. · 140 g kanafilettä (raaka) + 100 g porkkanaa + 100 g punajuurta + 80 g purjoa</span></div></div>
+              <div class="resepti">Marinoi kana sitruunalla, valkosipulilla, timjamilla ja oliiviöljyllä vähintään 15 min. Pilko juurekset lohkoiksi, lado uunivuokaan. Aseta kana juuresten päälle, paista 200 °C noin 25 min.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Iltapala</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Kreikkalainen jugurtti pellavansiemenillä</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">165 kcal · 14 g prot. · 200 g kreikkalaista jugurttia + 1 rkl pellavansiemeniä + kourallinen mustikkia</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">120 kcal · 10 g prot. · 150 g kreikkalaista jugurttia + 1 tl pellavansiemeniä + kourallinen mustikkia</span></div></div>
+              <div class="resepti">Annostele jugurtti, lisää mustikat ja ripottele pellavansiemenet päälle. Pellavansiemenet ovat erinomainen kuitujen ja omega-3-rasvojen lähde, jotka tukevat insuliiniherkkyyttä.</div>
+            </div>
+        </div>
+        <div class="paiva">
+          <h2>Torstai</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:00</span>
+              </div>
+              <div class="nimi">Lohikeitto ilman perunaa (kasvispohjainen)</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">500 kcal · 42 g prot. · 180 g lohta (raaka) + 150 g kesäkurpitsaa + 100 g porkkanaa + 150 ml kermaa (15 %)</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">370 kcal · 30 g prot. · 120 g lohta (raaka) + 120 g kesäkurpitsaa + 80 g porkkanaa + 100 ml kermaa (15 %)</span></div></div>
+              <div class="resepti">Kuullota porkkanat ja kesäkurpitsa kasvisliemessä (ei perunaa). Lisää kerma ja mausteet (tilli, valkopippuri). Lisää lohikuutiot ja hauduta miedolla lämmöllä 8–10 min kunnes lohi kypsyy. Lisää tilliä ennen tarjoilua.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:00</span>
+              </div>
+              <div class="nimi">Kananmuna-avokadolevy (ilman leipää)</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">290 kcal · 18 g prot. · 2 kananmunaa (kovaksi keitetty) + 80 g avokadoa + 1 tl sitruunamehua + mustapippuri</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">215 kcal · 13 g prot. · 2 kananmunaa (kovaksi keitetty) + 50 g avokadoa + 1 tl sitruunamehua + mustapippuri</span></div></div>
+              <div class="resepti">Keitä kananmunat kovaksi (9 min). Halkaise avokado, poista kivi, mausta sitruunalla ja pippurilla. Tarjoa kananmunaviipaleiden kanssa. Täyttävä ja nopea proteiini+rasva-välipala.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">17:30</span>
+              </div>
+              <div class="nimi">Turkkilainen jauhelihainen papupannu</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">530 kcal · 50 g prot. · 180 g naudanjauhelihaa (raaka) + 80 g mustia papuja (kuiva) + 150 g paprikaa + 100 g tomaattimurskaa</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">395 kcal · 36 g prot. · 120 g naudanjauhelihaa (raaka) + 55 g mustia papuja (kuiva) + 100 g paprikaa + 80 g tomaattimurskaa</span></div></div>
+              <div class="resepti">Keitä mustat pavut etukäteen tai käytä purkkipapuja huuhdeltuina. Ruskista jauheliha, lisää paprika ja mausteet (paprika, cumin, chili). Lisää pavut ja tomaattimurska, hauduta 10 min. Tarjoa tuoreen persiljan kera.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Iltapala</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Raejuusto ja kurkkupalat</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">150 kcal · 20 g prot. · 200 g raejuustoa + 100 g kurkkua + mustapippuri</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">110 kcal · 14 g prot. · 150 g raejuustoa + 80 g kurkkua + mustapippuri</span></div></div>
+              <div class="resepti">Annostele raejuusto kulhoon, mausta mustapippurilla ja yrteillä (ruohosipuli tai tilli). Tarjoa viipaloitujen kurkkujen kanssa. Yksinkertainen mutta tehokas proteiinipaukku ennen ikkunan sulkeutumista.</div>
+            </div>
+        </div>
+        <div class="paiva">
+          <h2>Perjantai</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:00</span>
+              </div>
+              <div class="nimi">Kana-parsakaali-wok soijakastikkeella</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">510 kcal · 53 g prot. · 200 g kanafilettä (raaka) + 200 g parsakaalia + 80 g paprikaa + 2 rkl soijakastiketta + 1 tl seesamiöljyä</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">380 kcal · 38 g prot. · 140 g kanafilettä (raaka) + 150 g parsakaalia + 60 g paprikaa + 1 rkl soijakastiketta + 1 tl seesamiöljyä</span></div></div>
+              <div class="resepti">Viipaloi kana ohuiksi suikaleiksi. Kuumenna pannu tai wok todella kuumaksi, lisää öljy. Paista kana ensin, lisää kasvikset, mausta soijakastikkeella, valkosipulilla ja inkiväärillä. Viimeistele seesamiöljyllä.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:00</span>
+              </div>
+              <div class="nimi">Valkopapuhummus vihannesdipeillä</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">260 kcal · 16 g prot. · 150 g valkopapuja (kypsytetty kuivasta, 55 g kuivana) + 1 rkl tahinia + 1 tl oliiviöljyä + 100 g porkkanaa ja selleriä</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">195 kcal · 11 g prot. · 100 g valkopapuja (kypsytetty kuivasta, 37 g kuivana) + 1 tl tahinia + 1 tl oliiviöljyä + 80 g porkkanaa ja selleriä</span></div></div>
+              <div class="resepti">Soseuta valkopavut tehosekoittimessa tahinilla, valkosipulilla, sitruunamehulla ja oliiviöljyllä tasaiseksi. Tarjoa porkkana- ja selleritikkujen kanssa. Voidaan valmistaa isompi erä koko viikolle.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">17:30</span>
+              </div>
+              <div class="nimi">Paistettu turska pinaatilla ja sitruunikaprikastikkeella</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">440 kcal · 50 g prot. · 220 g turskafilettä (raaka) + 150 g pinaattia + 1 rkl kapriksia + 1 rkl oliiviöljyä + sitruuna</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">325 kcal · 36 g prot. · 150 g turskafilettä (raaka) + 120 g pinaattia + 1 tl kapriksia + 1 tl oliiviöljyä + sitruuna</span></div></div>
+              <div class="resepti">Mausta turska suolalla, pippurilla ja sitruunalla. Paista pannulla oliiviöljyssä 3–4 min/puoli. Murenna pinaatti samalle pannulle lopuksi, lisää kaprikset. Tarjoa välittömästi.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Iltapala</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Proteiinijugurtti mansikoilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">190 kcal · 22 g prot. · 200 g kreikkalaista jugurttia (2 %) + 80 g tuoreita tai pakastettuja mansikoita</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">140 kcal · 16 g prot. · 150 g kreikkalaista jugurttia (2 %) + 60 g tuoreita tai pakastettuja mansikoita</span></div></div>
+              <div class="resepti">Sulata mansikat tarvittaessa, sekoita jugurttiin. Lisää halutessa ripaus kanelia. Yksinkertainen viikon viimeinen iltapala ennen viikonlopun normaalimpaa ateriarytmiä.</div>
+            </div>
+        </div>
+        <div class="paiva">
+          <h2>Lauantai</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Aamupala</strong>
+                <span class="aika">08:00</span>
+              </div>
+              <div class="nimi">Kaurapuuro marjoilla ja manteleilla (täysjyvä, matala GI)</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">430 kcal · 20 g prot. · 70 g kaurahiutaleita (kuiva, täysjyvä) + 250 ml maitoa (1,5 %) + 80 g pakastemarjoja + 20 g manteleita</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">330 kcal · 15 g prot. · 50 g kaurahiutaleita (kuiva, täysjyvä) + 200 ml maitoa (1,5 %) + 60 g pakastemarjoja + 15 g manteleita</span></div></div>
+              <div class="resepti">Keitä kaurapuuro maidossa miedolla lämmöllä, sekoita jatkuvasti noin 5–7 min. Anna levätä hetki. Lisää sulat marjat ja karkeasti hakatut mantelit päälle. Ei lisättyä sokeria.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:30</span>
+              </div>
+              <div class="nimi">Uunilohi parsakaalin ja rucolasalaatin kera</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">480 kcal · 46 g prot. · 180 g lohta (raaka) + 180 g parsakaalia + 50 g rucolaa + 30 g fetaa + sitruuna</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">355 kcal · 33 g prot. · 120 g lohta (raaka) + 130 g parsakaalia + 40 g rucolaa + 20 g fetaa + sitruuna</span></div></div>
+              <div class="resepti">Paista lohi uunissa 200 °C, 18–20 min. Höyrytä parsakaali al dente. Kokoa lautaselle rucolan, parsakaalin ja lohen kanssa, murenna feta päälle ja purista sitruunaa.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:30</span>
+              </div>
+              <div class="nimi">Saksanpähkinät ja appelsiini</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">270 kcal · 7 g prot. · 30 g saksanpähkinöitä + 1 iso appelsiini (n. 180 g)</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">200 kcal · 5 g prot. · 20 g saksanpähkinöitä + 1 pieni appelsiini (n. 130 g)</span></div></div>
+              <div class="resepti">Annostele pähkinät pieneen kulhoon. Kuori appelsiini ja nauti pähkinöiden kanssa. Appelsiinin matala GI yhdistettynä pähkinöiden rasvaan pitää verensokerin tasaisena.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Broilerikebab-lautanen tzatzikilla ja kasvislisäkkeellä</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">560 kcal · 56 g prot. · 220 g broilerin rintafilettä (raaka) + 150 g paprikaa + 100 g kurkkua + 100 g kreikkalaista jugurttia + 20 g raastettua kurkkua (tzatziki)</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">415 kcal · 40 g prot. · 150 g broilerin rintafilettä (raaka) + 100 g paprikaa + 80 g kurkkua + 80 g kreikkalaista jugurttia + 15 g raastettua kurkkua (tzatziki)</span></div></div>
+              <div class="resepti">Marinoi broileri jogurtilla, valkosipulilla, paprikajauheella ja sitruunalla (min. 30 min). Paista grillipannulla tai uunissa. Tee tzatziki sekoittamalla jugurtti, raastettu kurkku, valkosipuli ja tilli. Tarjoa paprika- ja kurkkuviipaleilla.</div>
+            </div>
+        </div>
+        <div class="paiva">
+          <h2>Sunnuntai</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Aamupala</strong>
+                <span class="aika">08:30</span>
+              </div>
+              <div class="nimi">Munakas pinaatilla, tomaatilla ja fetalla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">380 kcal · 30 g prot. · 3 kananmunaa + 80 g pinaattia + 80 g tomaattia + 30 g fetaa</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">275 kcal · 21 g prot. · 2 kananmunaa + 60 g pinaattia + 60 g tomaattia + 20 g fetaa</span></div></div>
+              <div class="resepti">Vatkaa kananmunat, mausta suolalla ja pippurilla. Kuullota pinaatti pannulla, lisää tomaattipalaset. Kaada munamassa päälle, paista miedolla lämmöllä kannen alla. Murenna feta täytteeksi ennen taittamista.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">13:00</span>
+              </div>
+              <div class="nimi">Naudan lihapatakastike punajuurella ja juuressoseen sijasta kaalimuhennos</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">530 kcal · 50 g prot. · 200 g naudanpaistisuikaleita (raaka) + 150 g punajuurta + 150 g keräkaalia + 100 ml punaviinietikkaa + 1 rkl tomaattipyrettä</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">395 kcal · 36 g prot. · 140 g naudanpaistisuikaleita (raaka) + 100 g punajuurta + 120 g keräkaalia + 70 ml punaviinietikkaa + 1 tl tomaattipyrettä</span></div></div>
+              <div class="resepti">Ruskista naudan suikaleet öljyssä, lisää sipuli, valkosipuli ja tomaattipyre. Lisää kuutioitu punajuuri ja kaalisuikaleet, kaada kasvisliemi päälle. Hauduta kannen alla 25–30 min. Viimeistele punaviinietikalla.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:30</span>
+              </div>
+              <div class="nimi">Kreikkalainen jugurtti chiasiemanilla ja mustikoilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">240 kcal · 18 g prot. · 200 g kreikkalaista jugurttia + 1 rkl chiasimeniä + 80 g mustikoita</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">175 kcal · 13 g prot. · 150 g kreikkalaista jugurttia + 1 tl chiasimeniä + 60 g mustikoita</span></div></div>
+              <div class="resepti">Sekoita kaikki ainekset kulhossa. Chiasiemet voivat turvota 5–10 min, jolloin rakenne muistuttaa puddinkia. Marjat antavat makeutta ilman lisättyä sokeria.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Uunisiika vihreällä salaatilla ja sitruunivinegretillä</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">480 kcal · 48 g prot. · 200 g siikaa tai kirjolohta (raaka) + 100 g rucolaa + 100 g pinaattia + 80 g kurkkua + 1 rkl oliiviöljyä + sitruuna</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">355 kcal · 34 g prot. · 140 g siikaa tai kirjolohta (raaka) + 80 g rucolaa + 80 g pinaattia + 60 g kurkkua + 1 tl oliiviöljyä + sitruuna</span></div></div>
+              <div class="resepti">Mausta kalafile sitruunalla, valkosipulilla ja yrteillä (tilli, persilja). Paista uunissa 200 °C noin 15–18 min. Kokoa salaatti rucolasta, pinaatista ja kurkusta. Tee vinegretti oliiviöljystä ja sitruunamehusta, lorauta päälle.</div>
+            </div>
+        </div>
+      <div class="kauppalista">
+        <h2>🛒 Kauppalista</h2>
+        <div class="ohje">Koko viikolle, molempien annokset mukana</div>
+        
+        <div class="kategoria">
+          <h3>Liha ja kala</h3>
+          <ul><li>Lohifilettä n. 1,8 kg (uunilohi ma + to + la)</li><li>Kanafilettä n. 1,6 kg (salaatti ma, uunikana ke, wok pe, kebab la)</li><li>Naudanjauhelihaa n. 900 g (pannu ti + to)</li><li>Naudanpaistisuikaleita n. 500 g (pata su)</li><li>Turskafilettä n. 600 g (paistettu turska pe)</li><li>Siikaa tai kirjolohta n. 600 g (uunikala su)</li><li>Tonnikalaprk (omassa liemessä) n. 400 g (välipala ke)</li></ul>
+        </div>
+        <div class="kategoria">
+          <h3>Vihannekset ja hedelmät</h3>
+          <ul><li>Parsakaalia n. 1,5 kg</li><li>Porkkanaa n. 1,2 kg</li><li>Paprikaa (punainen ja keltainen) n. 1,5 kg</li><li>Kesäkurpitsaa n. 800 g</li><li>Pinaattia n. 1,2 kg</li><li>Kurkkua n. 1,2 kg</li><li>Kirsikkatomaatteja n. 400 g</li><li>Tomaattia n. 500 g</li><li>Punajuurta n. 600 g</li><li>Selleriä n. 400 g</li><li>Purjoa n. 300 g</li><li>Avokadoja n. 6 kpl</li><li>Rucolaa n. 400 g</li><li>Keräkaalia n. 500 g</li><li>Appelsiineja 4–5 kpl</li><li>Tuoreita mansikoita n. 300 g (tai pakastettu)</li></ul>
+        </div>
+        <div class="kategoria">
+          <h3>Maitotuotteet ja kananmunat</h3>
+          <ul><li>Kreikkalaista jugurttia (2 %) n. 2,5 kg</li><li>Fetajuustoa n. 400 g</li><li>Raejuustoa n. 1,2 kg</li><li>Maitorahkaa (0 %) n. 1 kg</li><li>Kananmunia n. 18 kpl</li><li>Maitoa (1,5 %) n. 1 l</li><li>Kermaa (15 %) n. 400 ml</li></ul>
+        </div>
+        <div class="kategoria">
+          <h3>Kuivatuotteet ja säilykkeet</h3>
+          <ul><li>Punaisia linssejä n. 400 g</li><li>Kikherneitä (kuivattuja) n. 500 g</li><li>Mustia papuja (kuivattuja) n. 400 g</li><li>Valkopapuja (kuivattuja) n. 200 g</li><li>Kvinoaa n. 400 g</li><li>Kaurahiutaleita (täysjyvä) n. 400 g</li><li>Pakastemarjoja (mustikka, mansikka, sekamarjat) n. 1,5 kg</li><li>Tomaattimurskaa n. 400 g</li><li>Saksanpähkinöitä n. 200 g</li><li>Manteleita n. 200 g</li><li>Chiasimeniä n. 100 g</li><li>Pellavansiemeniä n. 100 g</li><li>Tahinia n. 1 purkki</li><li>Kookosmaito n. 400 ml</li><li>Oliiveja (tölkki) n. 200 g</li><li>Kapriksia n. 1 purkki (pieni)</li></ul>
+        </div>
+      </div>
+      <div class="vinkki">💡 Insuliiniresistenssistä hyötyy erityisesti pätkäpaasto: 6 tunnin syömisikkuna arjella pitää insuliinitasot matalina ja parantaa solujen herkkyyttä viikon mittaan. Valmista isompi erä linssisoppaa, valkopapuhummus tai kikhernesalaattia kerralla — se säästää aikaa ja helpottaa pysymistä suunnitelmassa kiireisinä päivinä!</div></div><div id="tab-normaali" class="tab-sisalto ">
+      <div class="alaotsikko">Viikko 1 — Matala GI, proteiinipainotteinen laihdutusviikko</div>
+      <div class="alakuvaus">Normaalit ateria-ajat, aamupala joka päivä</div>
+      <div class="summary"><div class="">Ville (83 kg): ~1650 kcal · 149 g prot.</div><div class="toinen">Sanna (55 kg): ~1400 kcal · 100 g prot.</div><div>Matala GI</div><div>Aamupala joka päivä</div><div>Ei paastoa</div></div>
+      
+        <div class="paiva">
+          <h2>Maanantai</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Aamupala</strong>
+                <span class="aika">08:00</span>
+              </div>
+              <div class="nimi">Kaurapuuro marjoilla ja kreikkalaisella jogurtilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">390 kcal · 28 g prot. · 65 g kaurahiutaleita + 150 g kreikkalaista jogurttia (2%) + 80 g pakastemarjoja</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">310 kcal · 19 g prot. · 50 g kaurahiutaleita + 100 g kreikkalaista jogurttia (2%) + 60 g pakastemarjoja</span></div></div>
+              <div class="resepti">Keitä kaurahiutaleet vedessä paksuksi puuroksi. Lisää päälle kreikkalainen jogurtti proteiinilisäksi. Koristele pakastemarjoilla (mustikka tai puolukka). Älä lisää sokeria — marjojen oma makeus riittää.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:00</span>
+              </div>
+              <div class="nimi">Uunilohi bataatilla ja parsakaalilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">520 kcal · 45 g prot. · 180 g lohifilettä (raaka) + 150 g bataattia + 150 g parsakaalia + 1 tl oliiviöljyä</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">410 kcal · 33 g prot. · 130 g lohifilettä (raaka) + 110 g bataattia + 130 g parsakaalia + 1 tl oliiviöljyä</span></div></div>
+              <div class="resepti">Leikkaa bataatti kuutioiksi ja paahda uunissa 200°C 20 min. Mausta lohifilee sitruunalla, valkosipulilla ja tillillä, uunita 180°C 15–18 min. Höyrytä tai keitä parsakaali al dente. Kokoa lautaselle ja viimeistele oliiviöljyllä.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:00</span>
+              </div>
+              <div class="nimi">Raejuustoa kurkkuviipaleilla ja pellavansiemenillä</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">220 kcal · 28 g prot. · 200 g raejuustoa (maustamaton) + 100 g kurkkua + 10 g pellavansiemeniä</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">165 kcal · 20 g prot. · 150 g raejuustoa (maustamaton) + 80 g kurkkua + 7 g pellavansiemeniä</span></div></div>
+              <div class="resepti">Annostele raejuusto kulhoon. Viipaloi kurkku ja asettele vierelle. Ripottele pellavansiemenet päälle. Mausta suolalla ja mustapippurilla. Nopea ja kylläinen välipala ilman verensokeripiikkiä.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Kanaa ja linssejä vihanneskastikkeessa</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">520 kcal · 52 g prot. · 190 g kanafilettä (raaka) + 60 g vihreitä linssejä (kuiva) + 100 g tomaattia + 80 g paprikaa + 80 g sipulia</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">415 kcal · 37 g prot. · 135 g kanafilettä (raaka) + 45 g vihreitä linssejä (kuiva) + 80 g tomaattia + 60 g paprikaa + 60 g sipulia</span></div></div>
+              <div class="resepti">Keitä linssit kypsiksi (n. 20 min). Ruskista kuutioitu kanafilee pannulla. Lisää pilkottu sipuli, paprika ja tomaattimurska. Hauduta 10–15 min miedolla lämmöllä. Sekoita kypsät linssit kastikkeeseen. Mausta kurkumalla, juustokuminalla ja suolalla.</div>
+            </div>
+        </div>
+        <div class="paiva">
+          <h2>Tiistai</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Aamupala</strong>
+                <span class="aika">08:00</span>
+              </div>
+              <div class="nimi">Munakas pinaatilla ja fetajuustolla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">400 kcal · 32 g prot. · 3 kananmunaa + 50 g pinaattia + 30 g fetajuustoa + 1 viipale ruisleipää (30 g)</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">300 kcal · 22 g prot. · 2 kananmunaa + 40 g pinaattia + 20 g fetajuustoa + 1 viipale ruisleipää (30 g)</span></div></div>
+              <div class="resepti">Vatkaa kananmunat kulhossa ja mausta suolalla ja pippurilla. Kuullota pinaatti pannulla, kaada munamassa päälle. Murustele feta pinnalle ja taita munakas. Tarjoa ruisleivän kanssa.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:00</span>
+              </div>
+              <div class="nimi">Kalkkunajauheliha-kesäkurpitsapata quinoalla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">530 kcal · 50 g prot. · 190 g kalkkunajauhelihaa (raaka) + 55 g quinoaa (kuiva) + 150 g kesäkurpitsaa + 80 g tomaattia + 60 g sipulia</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">415 kcal · 36 g prot. · 135 g kalkkunajauhelihaa (raaka) + 40 g quinoaa (kuiva) + 120 g kesäkurpitsaa + 60 g tomaattia + 50 g sipulia</span></div></div>
+              <div class="resepti">Keitä quinoa ohjeen mukaan (1 os quinoa + 2 os vettä, 15 min). Ruskista kalkkunajauheliha pannulla sipulin kanssa. Lisää kuutioitu kesäkurpitsa ja tomaattimurska. Hauduta 10 min. Tarjoa quinoan päällä ja mausta yrteillä.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:00</span>
+              </div>
+              <div class="nimi">Proteiinipirtelö marjoilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">210 kcal · 26 g prot. · 200 ml maustamatonta kreikkalaista jogurttia (2%) + 80 g pakastemarjoja + 1 rkl (15 g) hamppuproteiinijauhetta</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">170 kcal · 19 g prot. · 150 ml maustamatonta kreikkalaista jogurttia (2%) + 60 g pakastemarjoja + 1 tl (8 g) hamppuproteiinijauhetta</span></div></div>
+              <div class="resepti">Soseuta kaikki ainekset tehosekoittimella tasaiseksi. Voit lisätä lorauksen vettä sopivan koostumuksen saamiseksi. Nauti heti tai säilytä kylmässä muutama tunti.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Uunikana juuressalaatilla ja avokadolla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">510 kcal · 45 g prot. · 200 g kanafilettä (raaka) + 100 g porkkanaa + 100 g punajuurta + 80 g avokadoa + 50 g rukiolaa</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">415 kcal · 33 g prot. · 145 g kanafilettä (raaka) + 80 g porkkanaa + 80 g punajuurta + 60 g avokadoa + 40 g rukiolaa</span></div></div>
+              <div class="resepti">Mausta kanafileet sitruunalla, valkosipulilla ja rosmariinilla. Uunita 180°C 20–22 min kunnes sisälämpö on 75°C. Raasta porkkana ja punajuuri, sekoita rukiolaan. Viipaloi avokado päälle. Kastike: sitruunamehu + oliiviöljy.</div>
+            </div>
+        </div>
+        <div class="paiva">
+          <h2>Keskiviikko</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Aamupala</strong>
+                <span class="aika">08:00</span>
+              </div>
+              <div class="nimi">Skyr mansikka-chiasiemenillä</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">370 kcal · 30 g prot. · 250 g skyr (maustamaton) + 100 g tuoreita tai pakastettuja mansikoita + 12 g chiasiemeniä</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">280 kcal · 21 g prot. · 180 g skyr (maustamaton) + 80 g tuoreita tai pakastettuja mansikoita + 8 g chiasiemeniä</span></div></div>
+              <div class="resepti">Annostele skyr kulhoon. Lisää mansikkaviipaleita tai sulatettuja pakastemarjoja. Ripottele chiassiemenet päälle — ne tuovat lisää kuitua ja omega-3:a. Ei sokeria tarvita.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:00</span>
+              </div>
+              <div class="nimi">Kirjolohikeitto juureksilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">510 kcal · 42 g prot. · 180 g kirjolohifilettä (raaka) + 120 g porkkanaa + 100 g lanttua + 80 g purjoa + 100 ml maustamatonta ruokakermaa (15%)</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">400 kcal · 31 g prot. · 130 g kirjolohifilettä (raaka) + 90 g porkkanaa + 80 g lanttua + 60 g purjoa + 70 ml maustamatonta ruokakermaa (15%)</span></div></div>
+              <div class="resepti">Keitä juurekset (porkkana, lanttu) kuutioituina suolalla maustetussa vedessä 10 min. Lisää purjoviipaleet ja kuutioitu lohi. Keitä 5–7 min kunnes lohi on kypsää. Lisää kerma ja mausta tillillä, suolalla ja valkopippurilla.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:00</span>
+              </div>
+              <div class="nimi">Keitettyjä munia vihannespaloilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">200 kcal · 20 g prot. · 2 kovaksi keitettyä kananmunaa + 100 g paprikaa + 80 g kurkkua</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">150 kcal · 14 g prot. · 2 kovaksi keitettyä kananmunaa + 80 g paprikaa + 60 g kurkkua</span></div></div>
+              <div class="resepti">Keitä kananmunat kovaksi (9–10 min). Jäähdytä kylmässä vedessä ja kuori. Viipaloi paprika ja kurkku. Mausta munaviipaleita suolalla ja pippurilla. Nopea, proteiinipitoinen välipala ilman hiilihydraatteja.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Naudanjauheliha-kikhernesalaatti</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">570 kcal · 50 g prot. · 170 g naudanjauhelihaa 10% (raaka) + 80 g kikherneitä (kuiva tai tölkki 130 g kypsää) + 80 g tomaattia + 60 g punasipulia + 50 g lehtikaalia</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">455 kcal · 37 g prot. · 120 g naudanjauhelihaa 10% (raaka) + 60 g kikherneitä (kuiva tai tölkki 100 g kypsää) + 60 g tomaattia + 40 g punasipulia + 40 g lehtikaalia</span></div></div>
+              <div class="resepti">Ruskista jauheliha pannulla sipulin kanssa. Huuhtele ja valuta kikhernetölkki (tai keitä kuivat kikhereet). Sekoita kaikki ainekset kulhossa. Kastike: 1 rkl oliiviöljyä + sitruunamehu + valkosipuli + paprika. Tarjoa tuoreena.</div>
+            </div>
+        </div>
+        <div class="paiva">
+          <h2>Torstai</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Aamupala</strong>
+                <span class="aika">08:00</span>
+              </div>
+              <div class="nimi">Proteiinikaura pähkinöillä ja omenalla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">400 kcal · 27 g prot. · 65 g kaurahiutaleita + 100 g maustamatonta kreikkalaista jogurttia + 20 g manteleita + 80 g omenaa (kuutioitu)</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">305 kcal · 18 g prot. · 45 g kaurahiutaleita + 80 g maustamatonta kreikkalaista jogurttia + 15 g manteleita + 60 g omenaa (kuutioitu)</span></div></div>
+              <div class="resepti">Keitä kaura vedessä. Jäähdytä hieman ja sekoita kreikkalainen jogurtti sekaan. Lisää päälle kuutioitu omena ja rouhitut mantelit. Inkivääri tai kaneli sopivat mausteiksi — ei sokeria.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:00</span>
+              </div>
+              <div class="nimi">Kana-bataattivuoka parsakaalilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">540 kcal · 50 g prot. · 195 g kanafilettä (raaka) + 160 g bataattia + 160 g parsakaalia + 30 g mozzarellaa + 80 g tomaattia</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">420 kcal · 37 g prot. · 140 g kanafilettä (raaka) + 115 g bataattia + 130 g parsakaalia + 20 g mozzarellaa + 60 g tomaattia</span></div></div>
+              <div class="resepti">Kuutioi bataatti ja esikeitä 10 min. Leikkaa kana ohuiksi suikaleiksi. Lado vuokaan kerrokset: bataatti, kana, parsakaali, tomaatti. Murustele mozzarella päälle. Uunita 190°C noin 25 min.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:00</span>
+              </div>
+              <div class="nimi">Hummus ja vihannekset</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">230 kcal · 12 g prot. · 100 g hummusta (valmis tai itse tehty) + 80 g porkkanaa + 80 g selleriä</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">175 kcal · 9 g prot. · 75 g hummusta + 60 g porkkanaa + 60 g selleriä</span></div></div>
+              <div class="resepti">Valmis hummus käy hyvin. Jos teet itse: sekoita tehosekoittimessa kikhernetölkki (huuhdeltuna), tahnini 2 rkl, sitruunamehu, valkosipuli, oliiviöljy ja suola. Dippaa porkkanaa ja selleriä.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Sitruuna-yrttilohi linssisalaatilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">480 kcal · 48 g prot. · 185 g lohifilettä (raaka) + 60 g punaisia linssejä (kuiva) + 80 g kurkkua + 60 g tomaattia + 40 g pinaattia</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">400 kcal · 35 g prot. · 130 g lohifilettä (raaka) + 45 g punaisia linssejä (kuiva) + 60 g kurkkua + 50 g tomaattia + 30 g pinaattia</span></div></div>
+              <div class="resepti">Keitä punaiset linssit (15 min) ja anna jäähtyä. Mausta lohi sitruunankuorella, tillillä ja suolalla. Paista pannulla öljyssä 3–4 min per puoli. Sekoita jäähtyneet linssit pilkottujen kasvisten kanssa. Kastike: sitruunamehu + oliiviöljy + mustapippuri.</div>
+            </div>
+        </div>
+        <div class="paiva">
+          <h2>Perjantai</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Aamupala</strong>
+                <span class="aika">08:00</span>
+              </div>
+              <div class="nimi">Munakokkeli savulohella ja ruisleivällä</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">410 kcal · 34 g prot. · 3 kananmunaa + 60 g savulohta + 1 viipale ruisleipää (30 g) + 30 g pinaattia</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">295 kcal · 24 g prot. · 2 kananmunaa + 40 g savulohta + 1 viipale ruisleipää (30 g) + 20 g pinaattia</span></div></div>
+              <div class="resepti">Vatkaa munat kevyesti ja kaada kuumalle pannulle tilkan öljyn kanssa. Lisää savulohi suikaleina ja pinaatti. Sekoittele kunnes munat juuri hyytyy. Tarjoa ruisleivän päällä. Mausta suolalla, pippurilla ja tillin oksalla.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:00</span>
+              </div>
+              <div class="nimi">Turkkilainen kalkkunapata papujen kera</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">535 kcal · 52 g prot. · 195 g kalkkunafilettä (raaka) + 70 g valkoisia papuja (kuiva tai tölkki 120 g kypsää) + 100 g tomaattia + 70 g paprikaa + 60 g sipulia</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">415 kcal · 38 g prot. · 140 g kalkkunafilettä (raaka) + 50 g valkoisia papuja (kuiva tai tölkki 85 g kypsää) + 80 g tomaattia + 50 g paprikaa + 50 g sipulia</span></div></div>
+              <div class="resepti">Leikkaa kalkkunafilee kuutioiksi. Ruskista sipuli ja paprika pannulla. Lisää kalkkunakuutiot ja ruskista. Kaada tomaattimurska joukkoon, lisää papuja. Mausta paprikajauheella, juustokuminalla, suolalla ja pippurilla. Hauduta 15 min.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:00</span>
+              </div>
+              <div class="nimi">Kreikkalainen jogurtti pähkinöillä</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">220 kcal · 20 g prot. · 180 g kreikkalaista jogurttia (2%) + 20 g saksanpähkinöitä + 50 g mustikoita</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">175 kcal · 14 g prot. · 130 g kreikkalaista jogurttia (2%) + 15 g saksanpähkinöitä + 40 g mustikoita</span></div></div>
+              <div class="resepti">Annostele jogurtti kulhoon. Lisää saksanpähkinät rouhittuna ja mustikkamarjat. Saksanpähkinät tuovat omega-3-rasvahappoja ja hidastavat hiilihydraattien imeytymistä. Ei tarvita makeutusainetta.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Uunisei parsalla ja bataattisoseella</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">485 kcal · 48 g prot. · 200 g seifilettä (raaka) + 140 g bataattia + 120 g vihreää parsaa + 1 tl oliiviöljyä + 20 g parmesaania</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">385 kcal · 35 g prot. · 145 g seifilettä (raaka) + 100 g bataattia + 90 g vihreää parsaa + 1 tl oliiviöljyä + 15 g parmesaania</span></div></div>
+              <div class="resepti">Keitä bataatti pehmeäksi, soseta muutaman ruokalusikallisen veden kera. Mausta bataattisos suolalla ja inkiväärillä. Uunita seifileettä 180°C 15–18 min, parmesaani päälle viimeisiksi 3 min. Paahda parsa uunissa samaan aikaan, tilkka öljyä ja suola.</div>
+            </div>
+        </div>
+        <div class="paiva">
+          <h2>Lauantai</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Aamupala</strong>
+                <span class="aika">08:00</span>
+              </div>
+              <div class="nimi">Yön yli turvonnut kaura (overnight oats) marjoilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">395 kcal · 27 g prot. · 60 g kaurahiutaleita + 150 g maustamatonta kreikkalaista jogurttia + 100 ml maitoa (1,5%) + 80 g pakastemarjoja + 12 g chiassiemeniä</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">305 kcal · 19 g prot. · 45 g kaurahiutaleita + 100 g maustamatonta kreikkalaista jogurttia + 70 ml maitoa (1,5%) + 60 g pakastemarjoja + 8 g chiassiemeniä</span></div></div>
+              <div class="resepti">Sekoita illalla: kaurahiutaleet, jogurtti, maito ja chiassiemenet purkkiin. Laita jääkaappiin yöksi. Aamulla lisää päälle sulavia pakastemarjoja. Voit lisätä ripauksen kanelia verensokerivaikutuksen tasaamiseksi.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:00</span>
+              </div>
+              <div class="nimi">Kana-avokadosalaatti quinoapohjalla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">550 kcal · 49 g prot. · 185 g kanafilettä (raaka) + 55 g quinoaa (kuiva) + 90 g avokadoa + 80 g kurkkua + 60 g tomaattia + 30 g punasipulia</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">430 kcal · 36 g prot. · 130 g kanafilettä (raaka) + 40 g quinoaa (kuiva) + 65 g avokadoa + 60 g kurkkua + 50 g tomaattia + 20 g punasipulia</span></div></div>
+              <div class="resepti">Keitä quinoa ja anna jäähtyä. Grillaa tai paista kana maustettuna valkosipulilla ja paprikajauheella. Kokoa salaatti: quinoa pohjalle, kana paloiteltuna, avokadoviipaleet, kurkku, tomaatti ja punasipuli. Kastike: lime + oliiviöljy + korianteri.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:00</span>
+              </div>
+              <div class="nimi">Mantelivoileipä ruisleivälle kurkkuviipaleilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">240 kcal · 10 g prot. · 2 viipaletta ruisleipää (60 g) + 20 g mantelivoita (maustamaton) + 80 g kurkkua</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">180 kcal · 7 g prot. · 1 viipale ruisleipää (30 g) + 15 g mantelivoita + 60 g kurkkua</span></div></div>
+              <div class="resepti">Levitä mantelivoi ruisleivälle. Viipaloi kurkku päälle. Ruisleipä on matalampi GI kuin vaalea leipä ja mantelivoi tuo rasvaa, joka hidastaa hiilihydraattien imeytymistä. Nauti sellaisenaan.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Naudan wok lehtikaali-soijapavuilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">465 kcal · 48 g prot. · 190 g naudan sisäfileestä (raaka) + 100 g lehtikaalia + 80 g soijapapuja (edamame, pakaste) + 80 g paprikaa + 60 g porkkanaa</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">375 kcal · 36 g prot. · 135 g naudan sisäfileestä (raaka) + 80 g lehtikaalia + 60 g soijapapuja + 60 g paprikaa + 50 g porkkanaa</span></div></div>
+              <div class="resepti">Leikkaa naudanliha ohuiksi suikaleiksi. Kuumenna wok- tai paistinpannu erittäin kuumaksi. Paista lihasuikaleet nopeasti 2–3 min. Lisää kasvikset ja soijapavut, wokkaile 3–4 min. Mausta soijakastikkeella, valkosipulilla ja inkiväärillä.</div>
+            </div>
+        </div>
+        <div class="paiva">
+          <h2>Sunnuntai</h2>
+          
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Aamupala</strong>
+                <span class="aika">08:00</span>
+              </div>
+              <div class="nimi">Ruisleipä kananmunalla, lohella ja avokadolla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">420 kcal · 30 g prot. · 2 viipaletta ruisleipää (60 g) + 2 kananmunaa (paistettu) + 50 g savulohta + 60 g avokadoa</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">310 kcal · 21 g prot. · 1 viipale ruisleipää (30 g) + 2 kananmunaa (paistettu) + 35 g savulohta + 40 g avokadoa</span></div></div>
+              <div class="resepti">Paista kananmunat haluamallasi tavalla (paistettu tai poched). Viipaloi avokado ja levitä ruisleivälle. Lisää savulohi ja kananmunat päälle. Mausta sitruunalla, suolalla ja pippurilla. Ravitseva sunnuntaiviikonlopun aamupala.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Lounas</strong>
+                <span class="aika">12:00</span>
+              </div>
+              <div class="nimi">Uunilohi-linssipata juureksilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">540 kcal · 50 g prot. · 185 g lohifilettä (raaka) + 65 g vihreitä linssejä (kuiva) + 120 g porkkanaa + 100 g lanttua + 60 g purjoa</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">420 kcal · 36 g prot. · 130 g lohifilettä (raaka) + 45 g vihreitä linssejä (kuiva) + 90 g porkkanaa + 75 g lanttua + 40 g purjoa</span></div></div>
+              <div class="resepti">Keitä linssit ja kuutioidut juurekset yhdessä 20 min. Mausta liemi sipulilla, laakerinlehdellä ja suolalla. Uunita lohi erikseen 180°C 15 min. Nosta lohi linssipadan päälle tarjoillessa. Ripottele tuoretta tilliä.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Välipala</strong>
+                <span class="aika">15:00</span>
+              </div>
+              <div class="nimi">Raejuusto-mansikat-siemenet</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">210 kcal · 23 g prot. · 200 g raejuustoa (maustamaton) + 80 g mansikoita + 10 g auringonkukansiemeniä</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">165 kcal · 17 g prot. · 150 g raejuustoa (maustamaton) + 60 g mansikoita + 7 g auringonkukansiemeniä</span></div></div>
+              <div class="resepti">Annostele raejuusto kulhoon. Lisää viipaloituja tuoreita tai pakastettuja mansikoita. Ripottele auringonkukansiemenet päälle. Siemenet lisäävät terveellisiä rasvoja ja pitävät nälän loitolla seuraavaan ateriaan.</div>
+            </div>
+            <div class="ateria">
+              <div class="ateria-otsikko">
+                <strong>Päivällinen</strong>
+                <span class="aika">18:00</span>
+              </div>
+              <div class="nimi">Kalkkunafilee yrttipaistoksena parsakaali-fetasalaatilla</div>
+              <div class="annokset"><div class="annos"><span class="henkilo">Ville (83 kg)</span><span class="annos-tiedot">480 kcal · 52 g prot. · 210 g kalkkunafilettä (raaka) + 160 g parsakaalia + 40 g fetajuustoa + 60 g kirsikkatomaatteja + 30 g rukiolaa</span></div><div class="annos"><span class="henkilo">Sanna (55 kg)</span><span class="annos-tiedot">380 kcal · 38 g prot. · 150 g kalkkunafilettä (raaka) + 130 g parsakaalia + 25 g fetajuustoa + 50 g kirsikkatomaatteja + 25 g rukiolaa</span></div></div>
+              <div class="resepti">Marinoi kalkkunafilee: sitruunamehu, valkosipuli, oregano, oliiviöljy. Paista pannulla 5–6 min per puoli tai uunissa 185°C 22 min. Höyrytä parsakaali. Kokoa salaatti: parsakaali, fetamuruja, kirsikkatomaatit, rukiola. Kastike: sitruunamehu + oliiviöljy.</div>
+            </div>
+        </div>
+      <div class="kauppalista">
+        <h2>🛒 Kauppalista</h2>
+        <div class="ohje">Koko viikolle, molempien annokset mukana</div>
+        
+        <div class="kategoria">
+          <h3>Liha ja kala</h3>
+          <ul><li>Kanafileetä n. 2,0 kg (ma, ti, to, la, su aterioita varten)</li><li>Lohifilettä n. 1,4 kg (ma, to, su lounas + pe päivällinen)</li><li>Kirjolohifilettä n. 650 g (ke lounas)</li><li>Kalkkunajauhelihaa n. 650 g (ti lounas)</li><li>Kalkkunafilettä n. 800 g (pe lounas + su päivällinen)</li><li>Naudanjauhelihaa (10% rasva) n. 600 g (ke päivällinen)</li><li>Naudan sisäfileetä n. 650 g (la päivällinen)</li><li>Seifileetä n. 700 g (pe päivällinen)</li><li>Savulohta n. 250 g (pe aamupala + su aamupala)</li></ul>
+        </div>
+        <div class="kategoria">
+          <h3>Vihannekset ja kasvikset</h3>
+          <ul><li>Parsakaalia n. 1,5 kg</li><li>Bataattia n. 1,5 kg</li><li>Paprikaa (punainen/keltainen) n. 1,0 kg</li><li>Porkkanaa n. 1,2 kg</li><li>Kurkkua n. 1,0 kg</li><li>Tomaattia n. 1,0 kg (tuoreita)</li><li>Kirsikkatomaatteja n. 200 g</li><li>Punasipulia n. 400 g</li><li>Sipulia (keltainen) n. 600 g</li><li>Kesäkurpitsaa n. 600 g</li><li>Lanttua n. 500 g</li><li>Purjoa n. 400 g</li><li>Vihreää parsaa n. 400 g</li><li>Lehtikaalia n. 400 g</li><li>Avokadoa n. 700 g (4–5 kpl)</li><li>Rukiolaa/lehtisalaattia n. 250 g</li><li>Pinaattia n. 300 g</li><li>Punajuurta (tuore) n. 400 g</li><li>Selleriä n. 300 g</li><li>Omenaa n. 200 g (2 kpl)</li></ul>
+        </div>
+        <div class="kategoria">
+          <h3>Maitotuotteet ja kananmunat</h3>
+          <ul><li>Kananmunia n. 24 kpl</li><li>Kreikkalaista jogurttia (2%, maustamaton) n. 2,5 kg</li><li>Skyriä (maustamaton) n. 750 g</li><li>Raejuustoa (maustamaton) n. 1,0 kg</li><li>Fetajuustoa n. 200 g</li><li>Mozzarellaa n. 100 g</li><li>Parmesaania n. 70 g</li><li>Ruokakermaa 15% n. 300 ml</li><li>Maitoa (1,5%) n. 400 ml</li></ul>
+        </div>
+        <div class="kategoria">
+          <h3>Kuivatuotteet ja säilykkeet</h3>
+          <ul><li>Kaurahiutaleita (täysjyvä) n. 700 g</li><li>Quinoaa n. 300 g</li><li>Vihreitä linssejä (kuiva) n. 400 g</li><li>Punaisia linssejä (kuiva) n. 200 g</li><li>Kikherneitä (tölkki 2 kpl à 400 g tai kuivana 300 g)</li><li>Valkoisia papuja (tölkki 2 kpl à 400 g tai kuivana 250 g)</li><li>Hummusta (valmis) n. 250 g</li><li>Chiassiemeniä n. 80 g</li><li>Pellavansiemeniä n. 50 g</li><li>Manteleita n. 100 g</li><li>Saksanpähkinöitä n. 70 g</li><li>Auringonkukansiemeniä n. 50 g</li><li>Mantelivoita (maustamaton) n. 100 g</li><li>Hamppuproteiinijauhetta n. 50 g</li><li>Tahinia (seesaminsiementahnaa) n. 100 g</li></ul>
+        </div>
+        <div class="kategoria">
+          <h3>Pakasteet</h3>
+          <ul><li>Pakastemarjoja (mustikka/puolukka/mansikka-seos) n. 1,5 kg</li><li>Edamame-soijapapuja (pakaste) n. 300 g</li></ul>
+        </div>
+        <div class="kategoria">
+          <h3>Leipä</h3>
+          <ul><li>Ruisleipää (täysjyvä, viipaloitu) n. 1 pkt (400–500 g)</li></ul>
+        </div>
+      </div>
+      <div class="vinkki">💡 Valmista isompi satsi linssejä, quinoaa tai kalkkunapataa kerralla ja pakasta annoksia — säästät aikaa arjessa ja pysyt helpommin suunnitelmassa. Muista juoda riittävästi vettä (vähintään 1,5–2 l/pv): kunnollinen nesteytyys tukee aineenvaihduntaa ja vähentää näennäistä nälän tunnetta.</div></div>
+
+  <footer>Generoitu automaattisesti · ruokabot</footer>
+  <script>
+function naytaTab(id, nappi) {
+  document.querySelectorAll('.tab-sisalto').forEach(function(e){ e.classList.remove('aktiivinen'); });
+  document.querySelectorAll('.tab').forEach(function(e){ e.classList.remove('aktiivinen'); });
+  document.getElementById('tab-' + id).classList.add('aktiivinen');
+  nappi.classList.add('aktiivinen');
+}
+</script>
+</body>
+</html>
