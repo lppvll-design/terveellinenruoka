@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Siimakoulu</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f4f6f5; color: #1f2a26; line-height: 1.5;
+  padding: 24px 16px 64px; max-width: 880px; margin: 0 auto;
+}
+header { text-align: center; margin-bottom: 22px; }
+h1 { font-size: 1.7rem; color: #2f6b4f; }
+.meta { color: #6b7a73; font-size: 0.9rem; margin-top: 6px; }
+.meta a { color: #2f6b4f; }
+.tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 22px; }
+.tab {
+  background: #fff; border: 1px solid #d8e0db; color: #46524c;
+  padding: 10px 18px; border-radius: 999px; font-size: 0.92rem;
+  font-weight: 600; cursor: pointer; transition: all 0.15s;
+}
+.tab.aktiivinen { background: #2f6b4f; border-color: #2f6b4f; color: #fff; }
+.tab-sisalto { display: none; }
+.tab-sisalto.aktiivinen { display: block; }
+.alaotsikko { text-align: center; color: #3a4540; font-size: 1.05rem; margin-bottom: 4px; }
+.alakuvaus { text-align: center; color: #8a958f; font-size: 0.85rem; margin-bottom: 18px; }
+.summary { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 0 0 24px; }
+.summary div {
+  background: #2f6b4f; color: #fff; padding: 8px 16px; border-radius: 999px;
+  font-size: 0.85rem; font-weight: 600;
+}
+.summary div.toinen { background: #6b8f5f; }
+.kortti {
+  background: #fff; border-radius: 14px; padding: 18px 20px; margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.kortti h2 { font-size: 1.15rem; color: #2f6b4f; margin-bottom: 12px; }
+.kortti h3 { font-size: 0.95rem; color: #3a4540; margin: 14px 0 6px; }
+.kortti p { color: #46524c; font-size: 0.92rem; margin-bottom: 8px; }
+.kortti ul { list-style: none; display: grid; gap: 5px; margin-bottom: 8px; }
+.kortti li { font-size: 0.9rem; padding-left: 16px; position: relative; color: #46524c; }
+.kortti li::before { content: "•"; position: absolute; left: 0; color: #2f6b4f; }
+.rivi {
+  display: flex; justify-content: space-between; gap: 10px; align-items: baseline;
+  background: #f4f6f5; border-radius: 8px; padding: 8px 12px; font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+.rivi .avain { font-weight: 600; color: #2f6b4f; white-space: nowrap; }
+.rivi .arvo { color: #5a6660; text-align: right; }
+.taulukko-kaari { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.85rem; min-width: 640px; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid #eef1ef; vertical-align: top; }
+th { color: #2f6b4f; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em; }
+tbody tr:nth-child(even) { background: #f9fbfa; }
+.jaksolinkki { display: inline-block; margin-top: 6px; font-size: 0.85rem; color: #2f6b4f; }
+.vinkki {
+  background: #eaf3ee; border-left: 4px solid #2f6b4f; padding: 14px 18px;
+  border-radius: 8px; margin-top: 24px; font-size: 0.92rem; color: #2f4a3d;
+}
+.huomio {
+  background: #fdf6e8; border-left: 4px solid #c9963f; padding: 14px 18px;
+  border-radius: 8px; margin-bottom: 22px; font-size: 0.88rem; color: #5c4620;
+}
+.huomio a { color: #8a6416; }
+footer { text-align: center; color: #9aa6a0; font-size: 0.78rem; margin-top: 28px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🎣 Siimakoulu</h1>
+    <div class="meta">Muistiinpanot Kalastajan Kanavan <a href="https://www.kalastajankanava.fi/siimakoulu/">Siimakoulu-sarjasta</a></div>
+    <div class="meta">Siimatyypit, vahvuudet ja lajikohtaiset valinnat yhdellä sivulla</div>
+  </header>
+
+  <div class="huomio">
+    <strong>Huom.</strong> Siimakoulun jaksot ovat videoita, eikä niitä päästy katsomaan tätä koostetta tehdessä. Sivun sisältö on koottu yleisestä siimatietoudesta ja jaksojen otsikoista — se ei ole jaksojen litterointi. Tarkat tuotesuositukset ja mitat kannattaa varmistaa itse jaksoista; jokaisen välilehden lopussa on linkki alkuperäiseen videoon.
+  </div>
+
+  <div class="tabs"><button class="tab aktiivinen" onclick="naytaTab('perusteet', this)">1 · Perusteet</button><button class="tab" onclick="naytaTab('hauki', this)">2 · Hauki</button><button class="tab" onclick="naytaTab('meritaimen', this)">3 · Meritaimen</button><button class="tab" onclick="naytaTab('vetouistelu', this)">4 · Vetouistelu</button><button class="tab" onclick="naytaTab('jigi', this)">5 · Jigi</button><button class="tab" onclick="naytaTab('peruke', this)">6 · Perukkeet</button><button class="tab" onclick="naytaTab('muistilista', this)">Muistilista</button></div>
+
+  <div id="tab-perusteet" class="tab-sisalto aktiivinen">
+    <div class="alaotsikko">Jakso 1 — Mitä olet halunnut tietää siimoista</div>
+    <div class="alakuvaus">Materiaalit, ominaisuudet ja pakkausmerkintöjen lukeminen</div>
+    <div class="summary"><div>Mono</div><div class="toinen">Fluorocarbon</div><div>Kuitusiima</div></div>
+
+    <div class="kortti">
+      <h2>Kolme materiaalia</h2>
+      <h3>Monofilamentti (nailon)</h3>
+      <ul>
+        <li>Venyy 20–30 % — vaimentaa rynnistykset ja antaa anteeksi kovan iskun.</li>
+        <li>Halpa, helppo solmia, kelluu lievästi. Hyvä myös aluskerrokseksi kelalle.</li>
+        <li>Haurastuu UV-valossa ja vanhenee: vaihda kerran kaudessa, jos kalastat paljon.</li>
+      </ul>
+      <h3>Fluorocarbon</h3>
+      <ul>
+        <li>Taittaa valoa lähes veden tavoin → vähemmän näkyvä vedessä. Yleisin perukemateriaali.</li>
+        <li>Uppoaa ja kestää hankausta (kivet, simpukat, hauen kita) monoa paremmin.</li>
+        <li>Jäykempää ja venyy vähemmän kuin mono; solmut vaativat kostutuksen ja rauhallisen kiristyksen.</li>
+      </ul>
+      <h3>Kuitusiima (monisäikeinen, ”braid”)</h3>
+      <ul>
+        <li>Käytännössä nollavenymä → tuntuma ja iskunvarmuus jopa pitkällä heitolla ja syvällä.</li>
+        <li>Samalla vetolujuudella selvästi ohuempi kuin mono → pidemmät heitot, pienempi virran vastus.</li>
+        <li>Näkyvä ja liukas: lähes aina perukkeen kanssa. Ei anna anteeksi löysää kiristystä kalan lähellä.</li>
+        <li>Säiemäärä: 4-säikeinen on karheampi ja edullisempi, 8-säikeinen pyöreämpi, hiljaisempi ja heittää pidemmälle.</li>
+      </ul>
+    </div>
+
+    <div class="kortti">
+      <h2>Mitä pakkauksessa lukee</h2>
+      <div class="rivi"><span class="avain">mm</span><span class="arvo">Halkaisija. Kuitusiimoissa ei standardoitu — eri valmistajien 0,13 mm ei ole sama asia.</span></div>
+      <div class="rivi"><span class="avain">kg / lb</span><span class="arvo">Ilmoitettu murtolujuus. Solmu heikentää sitä 10–30 %, joten solmun laatu ratkaisee.</span></div>
+      <div class="rivi"><span class="avain">PE / #</span><span class="arvo">Japanilainen kuitusiimojen paksuusluokka: #0.8 ≈ 0,14 mm, #1.5 ≈ 0,20 mm, #3 ≈ 0,28 mm.</span></div>
+      <div class="rivi"><span class="avain">m</span><span class="arvo">Kelan pituus. 150 m riittää heittokalastukseen, vetouisteluun 300 m tai enemmän.</span></div>
+      <div class="rivi"><span class="avain">Väri</span><span class="arvo">Kirkkaat värit auttavat kalastajaa seuraamaan siimaa, veden sävyiset piilottavat sen kalalta.</span></div>
+      <a class="jaksolinkki" href="https://www.kalastajankanava.fi/videot/mita-olet-halunnut-tietaa-siimoista-jakso-1-siimakoulu/">▶ Katso jakso 1</a>
+    </div>
+  </div>
+
+  <div id="tab-hauki" class="tab-sisalto">
+    <div class="alaotsikko">Jakso 2 — Miten valita siima hauenkalastukseen</div>
+    <div class="alakuvaus">Isot syötit, terävät hampaat, lyhyet rynnistykset</div>
+    <div class="summary"><div>Kuitu 0,13–0,19 mm</div><div class="toinen">Peruke pakollinen</div></div>
+
+    <div class="kortti">
+      <h2>Pääsiima</h2>
+      <ul>
+        <li>Kuitusiima 0,13–0,19 mm (n. 10–18 kg) kattaa jerkeistä kevyempiin vaappuihin.</li>
+        <li>Nollavenymä varmistaa iskun, kun hauki nappaa syötin sivulta ja siimaa on ulkona paljon.</li>
+        <li>Isoilla syöteillä (jerkit, isot kumit) nouse 0,19–0,25 mm:iin — heitto rasittaa siimaa enemmän kuin kala.</li>
+      </ul>
+      <h2>Peruke</h2>
+      <ul>
+        <li>Teräsvaijeri (1x7 tai joustavampi 7x7) tai titaani, kun kalastat isoilla syöteillä ja haluat nollariskin.</li>
+        <li>Fluorocarbon 0,50–0,90 mm on hienovaraisempi vaihtoehto kirkkaassa vedessä ja pienemmillä syöteillä — tarkista jokaisen kalan jälkeen, hampaat karhentavat sen.</li>
+        <li>Pituus 30–50 cm. Lyhyempi ei suojaa heittokalastuksessa, kun hauki kääntyy syötin kanssa.</li>
+      </ul>
+      <a class="jaksolinkki" href="https://www.kalastajankanava.fi/videot/miten-valita-siima-hauenkalastukseen-jakso-2-siimakoulu/">▶ Katso jakso 2</a>
+    </div>
+  </div>
+
+  <div id="tab-meritaimen" class="tab-sisalto">
+    <div class="alaotsikko">Jakso 3 — Miten valita siima meritaimenen kalastukseen</div>
+    <div class="alakuvaus">Pitkät heitot, kirkas vesi ja rynnistävä kala lähellä rantaa</div>
+    <div class="summary"><div>Kuitu 0,10–0,13 mm</div><div class="toinen">FC-peruke 1,5–3 m</div></div>
+
+    <div class="kortti">
+      <h2>Miksi ohut</h2>
+      <ul>
+        <li>Heittopituus ratkaisee rantakalastuksessa: ohut 8-säikeinen kuitu 0,10–0,13 mm vie kevyen vieheen kauas ja leikkaa tuulta.</li>
+        <li>Vaihtoehto talvella: monofilamentti 0,25–0,30 mm ei jäädy renkaisiin samalla tavalla kuin vettä imevä kuitu.</li>
+      </ul>
+      <h2>Peruke</h2>
+      <ul>
+        <li>Fluorocarbon 0,26–0,35 mm, pituus 1,5–3 m. Pitkä peruke antaa kirkkaassa vedessä etäisyyttä näkyvään pääsiimaan ja vaimentaa taimenen lyhyet rynnistykset kalan ollessa jo jaloissa.</li>
+        <li>Liitos FG- tai Albright-solmulla, jotta se kulkee renkaiden läpi heitettäessä.</li>
+        <li>Suolainen vesi syövyttää: huuhtele kela ja tarkista perukkeen kunto kalareissun jälkeen.</li>
+      </ul>
+      <a class="jaksolinkki" href="https://www.kalastajankanava.fi/videot/miten-valita-siima-meritaimenen-kalastukseen-jakso-3-siimakoulu/">▶ Katso jakso 3</a>
+    </div>
+  </div>
+
+  <div id="tab-vetouistelu" class="tab-sisalto">
+    <div class="alaotsikko">Jakso 4 — Millainen siima vetouisteluun</div>
+    <div class="alakuvaus">Syvyyden hallinta, pitkät siimamäärät ja vetolaitteet</div>
+    <div class="summary"><div>Mono 0,30–0,40 mm</div><div class="toinen">tai kuitu 0,15–0,20 mm</div><div>300 m+</div></div>
+
+    <div class="kortti">
+      <h2>Mono vai kuitu</h2>
+      <ul>
+        <li><strong>Mono</strong> venyy ja vaimentaa iskun, kun vapa on pitimessä eikä kädessä. Paksumpi siima nostaa vieheen kulkusyvyyttä — sama viehe kulkee matalammalla kuin ohuella kuidulla.</li>
+        <li><strong>Kuitu</strong> uppoaa suoremmin, antaa tarkan syvyyden ja välittää pohjakosketuksen heti. Vaatii herkemmän vetolaitteen ja pehmeän vavan, koska venymää ei ole.</li>
+        <li>Metrimerkitty (värikoodattu) kuitusiima helpottaa syvyyden toistamista: laske metrit, merkitse muistiin, toista sama veto.</li>
+      </ul>
+      <h2>Lisäpainot</h2>
+      <ul>
+        <li>Painovaijeri tai lyijysydäminen siima vie vieheen syvälle ilman erillisiä painoja.</li>
+        <li>Kelalle vähintään 300 m — pitkät vedot ja syvät kalat vaativat siimaa varastoon.</li>
+      </ul>
+      <a class="jaksolinkki" href="https://www.kalastajankanava.fi/videot/millainen-siima-vetouisteluun-siimakoulu/">▶ Katso jakso 4</a>
+    </div>
+  </div>
+
+  <div id="tab-jigi" class="tab-sisalto">
+    <div class="alaotsikko">Jakso 5 — Millainen siima jigikalastukseen</div>
+    <div class="alakuvaus">Tuntuma ja nollavenymä ratkaisevat</div>
+    <div class="summary"><div>Kuitu 0,10–0,15 mm</div><div class="toinen">FC-peruke 0,30–0,45 mm</div></div>
+
+    <div class="kortti">
+      <h2>Pääsiima</h2>
+      <ul>
+        <li>8-säikeinen kuitusiima 0,10–0,15 mm: jigikalastuksessa isku tulee usein laskuvaiheessa, ja se tuntuu vain venymättömän siiman läpi.</li>
+        <li>Ohuempi siima = pienempi virran aiheuttama kaari = jigi pysyy pystysuorassa ja pohjatuntuma säilyy pienemmällä painolla.</li>
+        <li>Sileä, tiiviisti punottu siima vähentää renkaiden vinkumista ja pidentää heittoa.</li>
+      </ul>
+      <h2>Peruke</h2>
+      <ul>
+        <li>Fluorocarbon 0,30–0,45 mm, 0,5–1,5 m — suojaa kivikossa ja piilottaa liitoksen kuhalta kirkkaassa vedessä.</li>
+        <li>Hauen vesillä vaihda vaijeri- tai paksuun FC-perukkeeseen, vaikka kohdekala olisi kuha.</li>
+      </ul>
+      <a class="jaksolinkki" href="https://www.kalastajankanava.fi/videot/millainen-siima-jigikalastukseen-jakso-5-siimakoulu/">▶ Katso jakso 5</a>
+    </div>
+  </div>
+
+  <div id="tab-peruke" class="tab-sisalto">
+    <div class="alaotsikko">Jakso 6 — Millainen peruke, mihin käyttöön</div>
+    <div class="alakuvaus">Miksi peruke, mistä materiaalista ja millä solmulla</div>
+    <div class="summary"><div>Näkymättömyys</div><div class="toinen">Hankauskesto</div><div>Hampaat</div></div>
+
+    <div class="kortti">
+      <h2>Kolme syytä perukkeelle</h2>
+      <ul>
+        <li><strong>Näkyvyys:</strong> kuitusiima erottuu vedessä, fluorocarbon ei juuri lainkaan.</li>
+        <li><strong>Hankaus:</strong> kivet, simpukat ja pohja katkaisevat kuidun helposti; paksu FC kestää.</li>
+        <li><strong>Hampaat:</strong> hauki katkaisee minkä tahansa muun kuin vaijerin tai riittävän paksun FC:n.</li>
+      </ul>
+      <h2>Materiaali käyttökohteen mukaan</h2>
+      <div class="rivi"><span class="avain">Fluorocarbon</span><span class="arvo">Yleisperuke: kuha, ahven, taimen, kevyt haukikalastus</span></div>
+      <div class="rivi"><span class="avain">Teräsvaijeri 1x7</span><span class="arvo">Jäykkä, halpa, luotettava — isot haukisyötit</span></div>
+      <div class="rivi"><span class="avain">Teräsvaijeri 7x7</span><span class="arvo">Joustavampi, antaa syötille paremman liikkeen</span></div>
+      <div class="rivi"><span class="avain">Titaani</span><span class="arvo">Ei jää mutkalle kalan jälkeen, kallis mutta pitkäikäinen</span></div>
+      <div class="rivi"><span class="avain">Mono</span><span class="arvo">Vaimentava peruke esim. pintaonginnassa ja kevyessä uistelussa</span></div>
+      <h2>Solmut</h2>
+      <ul>
+        <li><strong>FG-solmu</strong> — ohuin ja vahvin kuitu–FC-liitos, kulkee renkaiden läpi. Opettele tämä ensin.</li>
+        <li><strong>Albright</strong> — helpompi vaihtoehto samaan liitokseen.</li>
+        <li><strong>Tuplauni (double uni)</strong> — nopea kenttäsolmu kahden siiman välille.</li>
+        <li><strong>Palomar / Rapala-solmu</strong> — koukkuun ja lukkoon; Rapala-solmu jättää lenkin, joka antaa vieheelle vapaan liikkeen.</li>
+        <li>Kostuta aina solmu ennen kiristystä — kuiva kiristys polttaa siiman ja vie lujuudesta ison osan.</li>
+      </ul>
+      <a class="jaksolinkki" href="https://www.kalastajankanava.fi/videot/millainen-peruke-mihin-kayttoon-jakso-6-siimakoulu/">▶ Katso jakso 6</a>
+    </div>
+  </div>
+
+  <div id="tab-muistilista" class="tab-sisalto">
+    <div class="alaotsikko">Muistilista — siiman valinta kalastustavan mukaan</div>
+    <div class="alakuvaus">Suuntaa antavat vahvuudet; tarkista omat vapa- ja kelarajoitukset</div>
+
+    <div class="kortti">
+      <h2>Valintataulukko</h2>
+      <div class="taulukko-kaari">
+      <table>
+        <thead>
+          <tr><th>Kalastustapa</th><th>Pääsiima</th><th>Vahvuus</th><th>Peruke</th><th>Vinkki</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Hauki, heitto</td><td>Kuitu</td><td>0,13–0,19 mm</td><td>Vaijeri tai FC 0,50–0,90 mm, 30–50 cm</td><td>Tarkista peruke joka kalan jälkeen</td></tr>
+          <tr><td>Hauki, isot jerkit</td><td>Kuitu</td><td>0,19–0,25 mm</td><td>Vaijeri 7x7 tai titaani</td><td>Heitto rasittaa siimaa enemmän kuin kala</td></tr>
+          <tr><td>Meritaimen, rannalta</td><td>Kuitu (talvella mono)</td><td>0,10–0,13 mm / mono 0,25–0,30 mm</td><td>FC 0,26–0,35 mm, 1,5–3 m</td><td>Pitkä peruke kirkkaaseen veteen</td></tr>
+          <tr><td>Jigi, kuha</td><td>Kuitu 8-säie</td><td>0,10–0,15 mm</td><td>FC 0,30–0,45 mm, 0,5–1,5 m</td><td>Ohut siima = parempi pohjatuntuma</td></tr>
+          <tr><td>Vetouistelu, mono</td><td>Mono</td><td>0,30–0,40 mm</td><td>Vaijeri haukivesillä</td><td>Paksumpi siima nostaa vieheen kulkusyvyyttä</td></tr>
+          <tr><td>Vetouistelu, kuitu</td><td>Kuitu, metrimerkitty</td><td>0,15–0,20 mm</td><td>FC 0,40–0,60 mm</td><td>Löysempi vetolaite, pehmeä vapa</td></tr>
+          <tr><td>Ahven, kevyt heitto</td><td>Kuitu</td><td>0,06–0,10 mm</td><td>FC 0,18–0,26 mm</td><td>Kelan on oltava riittävän kevyt ohuelle siimalle</td></tr>
+          <tr><td>Perhokalastus</td><td>Perhosiima + tapered leader</td><td>Luokka vavan mukaan</td><td>FC/mono-kärki 0,12–0,30 mm</td><td>Uppoava vai kelluva siima kalastussyvyyden mukaan</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="kortti">
+      <h2>Kelalle ja kalareissulle</h2>
+      <ul>
+        <li>Täytä kela reunaan asti (n. 1–2 mm vajaaksi) — vajaa kela lyhentää heittoa selvästi.</li>
+        <li>Laita kuidun alle monoaluskerros tai teippi, muuten kuitu luistaa kelan rummulla.</li>
+        <li>Katkaise kauden aikana kärjestä muutama metri kulunutta siimaa; käännä kuitusiima ympäri, kun etupää on loppuun kulunut.</li>
+        <li>Säilytä siimat pimeässä ja viileässä — UV-valo vanhentaa erityisesti monoa.</li>
+        <li>Tarkista siiman kärki sormien välissä jokaisen ison kalan ja pohjakosketuksen jälkeen.</li>
+      </ul>
+    </div>
+
+    <div class="vinkki">💡 Jos epäröit kahden vahvuuden välillä: heittokalastuksessa valitse ohuempi (pidempi heitto, enemmän nappeja) ja uistelussa paksumpi (siimaa on ulkona paljon eikä kalaa näe tulevan).</div>
+  </div>
+
+  <footer>Muistiinpanot Kalastajan Kanavan Siimakoulusta · <a href="https://www.kalastajankanava.fi/siimakoulu/">kalastajankanava.fi/siimakoulu</a></footer>
+  <script>
+function naytaTab(id, nappi) {
+  document.querySelectorAll('.tab-sisalto').forEach(function(e){ e.classList.remove('aktiivinen'); });
+  document.querySelectorAll('.tab').forEach(function(e){ e.classList.remove('aktiivinen'); });
+  document.getElementById('tab-' + id).classList.add('aktiivinen');
+  nappi.classList.add('aktiivinen');
+}
+</script>
+</body>
+</html>
