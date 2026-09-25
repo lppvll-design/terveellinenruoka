@@ -28,6 +28,9 @@ claude:
 #   tavoitehinta: (valinnainen) hälytä kun hinta on tämä tai alle, €
 #   urlit:       yksi tai useampi tuotesivun linkki (Happy Angler, Tokmanni, Kärkkäinen,
 #                Ruthless Fishing, Eräkellari, Hintaopas ...)
+#                WooCommerce-kaupoissa (esim. Soutuveneet.fi) variantin voi valita
+#                URLin loppuun lisättävällä #-osalla, esim. .../castello-esoutu/#special.
+#                Ilman sitä botti seuraa sivun halvinta varianttia.
 #   hintaopas:   (valinnainen) saman tuotteen Hintaopas-linkki. Botti hakee sieltä
 #                3 kk hintahistorian aitoustarkistukseen. Jos urlit-listassa on jo
 #                Hintaopas-linkki, tätä ei tarvita.
@@ -39,3 +42,12 @@ claude:
 #      - https://www.erakellari.fi/kalastus/daiwa-tatula-tw-200-25-hyrrakela-oikeakatinen/p/043178923542/
 #    hintaopas: https://hintaopas.fi/product.php?p=1234567
 tuotteet:
+  - nimi: Castello eSoutu soutuvene
+    tavoitehinta: 1390   # kevään 2026 kampanjahinta, ovh 1690 €
+    urlit:
+      - https://soutuveneet.fi/soutuveneet/castello-esoutu/
+
+  - nimi: Castello eSoutu Special soutuvene
+    tavoitehinta: 1690   # kevään 2026 kampanjahinta, ovh 1990 €
+    urlit:
+      - https://soutuveneet.fi/soutuveneet/castello-esoutu/#special

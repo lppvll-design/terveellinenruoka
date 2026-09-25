@@ -88,13 +88,23 @@ def fetch_shopify(url: str, s) -> Hinta:
 
 
 def fetch_woocommerce(url: str, s) -> Hinta:
-    """Ruthless Fishing ym. WooCommerce: Store API ?slug="""
+    """Ruthless Fishing, Soutuveneet.fi ym. WooCommerce: Store API ?slug=
+    Variantin voi valita URLin #-osalla, esim. .../castello-esoutu/#special"""
     p = urlparse(url)
-    slug = re.search(r"/(?:tuote|product)/([^/?#]+)", p.path).group(1)
-    arr = _get(f"{p.scheme}://{p.netloc}/wp-json/wc/store/v1/products?slug={slug}", s, as_json=True)
+    m = re.search(r"/(?:tuote|product)/([^/?#]+)", p.path) or re.search(r"/([^/?#]+)/?$", p.path)
+    api = f"{p.scheme}://{p.netloc}/wp-json/wc/store/v1/products"
+    arr = _get(f"{api}?slug={m.group(1)}", s, as_json=True)
     if not arr:
         raise ValueError("WooCommerce: tuotetta ei löytynyt")
     j = arr[0]
+    want = p.fragment.lower()
+    if want:
+        v = next((x for x in j.get("variations", [])
+                  if any(want in str(a.get("value", "")).lower() for a in x.get("attributes", []))),
+                 None)
+        if v is None:
+            raise ValueError(f"WooCommerce: varianttia '{want}' ei löytynyt")
+        j = _get(f"{api}/{v['id']}", s, as_json=True)
     pr = j["prices"]
     div = 10 ** int(pr.get("currency_minor_unit", 2))
     price = int(pr["price"]) / div
@@ -179,7 +189,10 @@ def fetch_html(url: str, s) -> Hinta:
 
 
 def fetch_price(url: str, s) -> Hinta:
-    path = urlparse(url).path
+    p = urlparse(url)
+    path = p.path
+    if p.fragment:  # WooCommerce-variantti; muut tavat antaisivat halvimman variantin hinnan
+        return fetch_woocommerce(url, s)
     tries = []
     if "/products/" in path:
         tries.append(fetch_shopify)
@@ -251,7 +264,8 @@ def store_name(url: str) -> str:
     host = urlparse(url).netloc.removeprefix("www.")
     names = {"happyangler.fi": "Happy Angler", "tokmanni.fi": "Tokmanni",
              "karkkainen.com": "Kärkkäinen", "ruthlessfishing.fi": "Ruthless Fishing",
-             "erakellari.fi": "Eräkellari", "hintaopas.fi": "Hintaopas"}
+             "erakellari.fi": "Eräkellari", "hintaopas.fi": "Hintaopas",
+             "soutuveneet.fi": "Soutuveneet.fi"}
     return names.get(host, host)
 
 
