@@ -1,0 +1,41 @@
+# Tarjousbotin asetukset ja seurattavat tuotteet
+# Botti lukee tämän tiedoston joka ajokerralla – muutokset tulevat voimaan heti.
+# Webhookin voi antaa myös ympäristömuuttujana TARJOUS_WEBHOOK (ohittaa tämän).
+discord_webhook: "https://discord.com/api/webhooks/XXX/YYY"
+
+# Black Week -jakso: tällöin tarkistetaan tiheämmin.
+# Black Friday 2026 on pe 27.11., Cyber Monday ma 30.11. Mukana myös Singles' Day 11.11.
+black_week:
+  alku: 2026-11-09
+  loppu: 2026-12-01
+
+ajovali_min:
+  normaali: 180      # muulloin 3 h välein (ympäri vuoden)
+  black_week: 15     # Black Weekin aikana 15 min välein
+
+halytykset:
+  pudotus_pct: 10                 # hälytä jos hinta putoaa ≥ 10 % edellisestä tarkistuksesta
+  alin_hinta_min_havaintoja: 5    # "alin seurattu hinta" vasta kun historiaa on kertynyt
+
+# Claude Haiku kommentoi hälytykset ja kirjoittaa päivittäisen katsauksen (--katsaus).
+# API-avain luetaan ympäristömuuttujasta ANTHROPIC_API_KEY.
+claude:
+  kaytossa: true
+  malli: claude-haiku-4-5
+
+# Tuotteet:
+#   nimi:        oma nimi tuotteelle
+#   tavoitehinta: (valinnainen) hälytä kun hinta on tämä tai alle, €
+#   urlit:       yksi tai useampi tuotesivun linkki (Happy Angler, Tokmanni, Kärkkäinen,
+#                Ruthless Fishing, Eräkellari, Hintaopas ...)
+#   hintaopas:   (valinnainen) saman tuotteen Hintaopas-linkki. Botti hakee sieltä
+#                3 kk hintahistorian aitoustarkistukseen. Jos urlit-listassa on jo
+#                Hintaopas-linkki, tätä ei tarvita.
+#
+# Malli:
+#  - nimi: Daiwa Tatula TW 200 hyrräkela
+#    tavoitehinta: 140
+#    urlit:
+#      - https://www.erakellari.fi/kalastus/daiwa-tatula-tw-200-25-hyrrakela-oikeakatinen/p/043178923542/
+#    hintaopas: https://hintaopas.fi/product.php?p=1234567
+tuotteet:
